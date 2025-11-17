@@ -1,0 +1,277 @@
+:root{--bg:#121212;--card:#181818;--accent:#1DB954;--muted:#b3b3b3}
+html,body{height:100%;}
+/* reset box-sizing and page basics so layout calculations are predictable */
+*,*::before,*::after{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Segoe UI,Roboto,system-ui,-apple-system,'Helvetica Neue',Arial;
+  background:linear-gradient(180deg,#0f0f0f 0%, #121212 100%);
+  color:var(--muted);
+  display:flex;
+  justify-content:center;
+  /* remove page padding so the main panel can reach the viewport edges */
+  padding:0;
+}
+main{
+  /* main becomes a simple centering container; the visual card is .card */
+  width:100%;
+  max-width:960px;
+  margin:24px auto;
+  color:#fff;
+  display:flex;
+  justify-content:center;
+  padding: 0 20px;
+}
+/* layout: allow main to fill viewport and let tracks scroll */
+/* ensure we only set height rules once and keep the small top breathing margin */
+/* main already defined above; keep min-height consistent */
+
+#top-tracks { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 16px; 
+  flex: 1 1 auto; 
+  min-height:0;
+  margin-top: 40px;
+}
+#top-list { 
+  flex: 1 1 auto; 
+  overflow: auto; 
+  padding-right: 12px; 
+  min-height:0;
+  margin-top: 20px;
+}
+
+/* blurred background element */
+#bg-blur{position:fixed;inset:0;z-index:0;background-size:cover;background-position:center;filter:blur(30px) saturate(1.1);opacity:0;transition:opacity 400ms ease, transform 400ms ease;transform:scale(1.03);pointer-events:none}
+/* place main above the background */
+main{position:relative;z-index:2}
+/* The opaque inner card that contains all content and blocks the blurred bg */
+.card{
+  background: rgba(24,24,24,0.99);
+  border: 1px solid rgba(255,255,255,0.03);
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,0.02);
+  width: 100%;
+  /* constrain the card to the viewport and allow internal scrolling */
+  max-height: calc(100vh - 48px - 80px); /* Account for mini-player height */
+  display: flex;
+  flex-direction: column;
+  position: relative; 
+  z-index: 3;
+  overflow: auto; /* allow scrolling inside the card */
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 80px; /* Space for mini-player */
+}
+
+/* ensure sections inside the card can flex and let lists scroll */
+.card > section{flex:0 0 auto}
+.card #top-tracks{flex:1 1 auto; min-height:0}
+/* dim overlay to keep contrast */
+#bg-blur::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.55));}
+/* modern button styles */
+button{
+  background: linear-gradient(180deg, var(--accent), #0fb45a);
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(24,24,24,0.6), 0 1px 0 rgba(255,255,255,0.02) inset;
+  transition: transform 120ms ease, box-shadow 120ms ease, opacity 120ms ease;
+}
+button:hover{ transform: translateY(-2px); box-shadow: 0 10px 26px rgba(24,24,24,0.7); }
+button:active{ transform: translateY(0); opacity:0.95 }
+button:focus{ outline: 3px solid rgba(29,185,84,0.18); outline-offset: 2px }
+
+.container{max-width:960px;margin:8px auto 0;}
+
+/* Ensure each direct child of main forms its own stacking context
+  so elements do not visually overlap due to transforms or z-index issues */
+/* previously we forced stacking on each section which caused unintended overlap in some browsers;
+  let document flow handle stacking and rely on z-index only when necessary */
+/* main > * { position: relative; z-index: 3 } */
+
+/* Add consistent vertical spacing between sections to avoid visual crowding */
+main section { 
+  margin: 32px 0; 
+  padding: 0 16px;
+}
+
+/* Make headings more spacious and predictable */
+h1, h2, h3 { 
+  margin: 0 0 24px; 
+  line-height: 1.2;
+}
+h1 { 
+  font-size: 2.4rem;
+  margin-bottom: 32px;
+}
+h2 { 
+  font-size: 1.6rem;
+  margin-bottom: 20px;
+}
+h3 { 
+  font-size: 1.05rem;
+  margin-bottom: 16px;
+}
+
+/* Ensure the top-list itself is visually contained */
+#top-list { margin-top: 6px; }
+
+.muted{color:var(--muted)}
+.small{font-size:0.9rem}
+.hidden{display:none}
+.controls{margin-top:12px;display:flex;gap:8px;justify-content:center}
+#device-info{font-family:monospace;background:#101010;padding:8px;border-radius:6px;margin-bottom:8px;color:var(--muted)}
+#track-info{font-weight:700;margin-bottom:8px;color:#fff}
+#top-list{list-style:none;padding:0;margin:8px 0;max-width:680px;margin-left:auto;margin-right:auto}
+#top-list li{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));margin-bottom:10px;cursor:pointer;transition:transform 140ms ease, background 140ms ease, box-shadow 140ms ease}
+/* reduce hover lift to avoid overlapping neighboring content */
+#top-list li:hover{ transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.55); background: linear-gradient(90deg, rgba(29,185,84,0.04), rgba(255,255,255,0.01)); }
+#top-list li{overflow:hidden} /* clip any child overflow */
+#top-list img.track-thumb, #mini-cover{position:relative;z-index:1;display:block;transform:none !important;transition:none !important}
+/* ensure controls sit above thumbnails to avoid being covered */
+.controls button, .icon-btn{position:relative;z-index:2}
+/* ensure meta text keeps space and doesn't shift under thumbnails */
+#top-list .meta{min-width:0}
+#top-list img.track-thumb{width:64px;height:64px;object-fit:cover;border-radius:6px;margin:0}
+#top-list .meta{flex:1;text-align:left}
+#top-list .meta .title{font-weight:700;color:#fff}
+#top-list .meta .sub{color:var(--muted);font-size:0.9rem}
+
+#mini-wrap{display:flex;align-items:center;gap:12px;justify-content:center}
+#mini-title{font-weight:700;color:#fff}
+#mini-artist{color:var(--muted)}
+#mini-player .controls button{padding:8px 10px;border-radius:10px;min-width:44px}
+#mini-player .controls button:hover{transform:translateY(-2px)}
+
+/* Specific fixes for the mini-player overlap */
+#mini-player {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 16px;
+  background: rgba(18, 18, 18, 0.95);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
+}
+#mini-wrap {
+  justify-content: center;
+  max-width: 960px;
+  margin: 0 auto;
+  gap: 20px;
+}
+.card .controls {
+  z-index: 4;
+  margin-top: 16px;
+}
+.card img.track-thumb, .card #mini-cover {
+  transform: none !important;
+  position: relative !important;
+}
+.card #top-tracks {
+  margin-bottom: 80px; /* Make room for fixed mini-player */
+}
+
+/* icon button variant */
+.icon-btn{
+  background: linear-gradient(180deg,#1db954,#19a64a);
+  padding: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+}
+.icon-btn svg{
+  display: block;
+  opacity: 0.98;
+}
+.icon-btn:hover{
+  filter: brightness(1.05);
+  transform: translateY(-2px);
+}
+.icon-btn:active{
+  transform: translateY(0);
+}
+
+/* Mini player styles */
+#mini-player {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(18, 18, 18, 0.98);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
+  padding: 16px 24px;
+}
+
+#mini-wrap {
+  max-width: 960px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+#mini-wrap .controls {
+  display: flex;
+  gap: 12px;
+  margin: 0;
+}
+
+#mini-wrap > div {
+  flex: 1;
+}
+
+#mini-cover {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+}
+
+/* Progress bar */
+#progress-container {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 680px;
+  margin: 24px auto;
+  padding: 0 24px;
+}
+#progress-bar {
+  flex: 1;
+  height: 6px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 999px;
+  overflow: hidden;
+}
+#progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg,var(--accent),#33cc77);
+  width: 0%;
+  transition: width 0.12s linear;
+}
+#progress-current,
+#progress-duration {
+  width: 48px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+#btn-resume{background:transparent;border:1px solid rgba(255,255,255,0.08);padding:6px 12px;border-radius:16px;color:var(--muted)}
+
+/* small responsive tweaks */
+@media (max-width:640px){
+  main{padding:18px}
+  #top-list img.track-thumb{width:48px;height:48px}
+  button{padding:8px 12px}
+}
+

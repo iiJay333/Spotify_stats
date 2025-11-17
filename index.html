@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>My Local Site</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="bg-blur" aria-hidden="true"></div>
+  <main class="container">
+    <div class="card">
+      <h1>Spotify Web Playback Demo</h1>
+
+      <section id="auth">
+      <p>
+        This demo shows how to authenticate with Spotify and use the Web Playback
+        SDK to play music through your Spotify account (requires Spotify
+        Premium).
+      </p>
+  <button id="btn-connect" onclick="window.location.href='/login'">Connect with Spotify</button>
+      <div id="auth-status" class="muted"></div>
+    </section>
+    
+    <section id="player" class="hidden">
+      <div id="device-info">Device ID: <span id="device-id">-</span></div>
+      <div id="track-info">No track playing</div>
+      <div class="controls">
+        <button id="btn-play" class="icon-btn" aria-label="Play sample track">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 3v18l15-9L5 3z" fill="#fff"/></svg>
+        </button>
+        <button id="btn-pause" class="icon-btn" aria-label="Pause">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 4h4v16H6zM14 4h4v16h-4z" fill="#fff"/></svg>
+        </button>
+      </div>
+    </section>
+
+    <section id="top-tracks" class="muted">
+      <h2>Your Top Tracks</h2>
+      <!-- Visible debug/status for top-tracks fetch (helps diagnose empty list) -->
+      <div id="top-debug" class="small muted" aria-live="polite" style="margin-bottom:12px">Status: idle</div>
+      <p>
+        Time range:
+        <select id="top-range">
+          <option value="short_term">Last 4 weeks (month)</option>
+          <option value="medium_term">Last 6 months</option>
+          <option value="long_term">All time (year)</option>
+        </select>
+        <button id="btn-refresh-top">Refresh</button>
+        <button id="btn-play-top">Play Top 1</button>
+      </p>
+      <ol id="top-list">
+        <!-- top tracks will be rendered here -->
+      </ol>
+      <p class="small muted">Note: Spotify provides short_term (~4 weeks), medium_term (~6 months) and long_term (several years). Day-level granularity is not available via the API.</p>
+    </section>
+
+
+
+    <section id="progress-section" class="muted">
+      <div id="resume-wrap" style="margin:12px 0;">
+        <button id="btn-resume" class="hidden">Resume last track</button>
+      </div>
+      <div id="progress-container">
+        <span id="progress-current">0:00</span>
+        <div id="progress-bar">
+          <div id="progress-fill" style="width:0%"></div>
+        </div>
+        <span id="progress-duration">0:00</span>
+      </div>
+    </section>
+
+    <section id="notes" class="muted small">
+      <p>
+        Setup: register an app at the Spotify Developer Dashboard and set the
+        Redirect URI to <code>http://localhost:3000/</code> (or whichever host
+        and port you will run the included server on). Put your client id and
+        secret into environment variables as described in the README.
+      </p>
+    </section>
+    </div>
+
+  </main>
+
+  <!-- Fixed mini-player at the bottom -->
+  <div id="mini-player" class="muted small">
+    <div id="mini-wrap">
+      <img id="mini-cover" src="" alt="cover" style="display:none" />
+      <div>
+        <div id="mini-title">-</div>
+        <div id="mini-artist" class="muted">-</div>
+      </div>
+      <div class="controls">
+        <button id="mini-prev" class="icon-btn" aria-label="Previous">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11 18V6l-8.5 6L11 18zm1-12v12l8.5-6L12 6z" fill="#fff"/></svg>
+        </button>
+        <button id="mini-play" class="icon-btn" aria-label="Play">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 3v18l15-9L5 3z" fill="#fff"/></svg>
+        </button>
+        <button id="mini-pause" class="icon-btn" aria-label="Pause">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 4h4v16H6zM14 4h4v16h-4z" fill="#fff"/></svg>
+        </button>
+        <button id="mini-next" class="icon-btn" aria-label="Next">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13 6v12l8.5-6L13 6zM11 6H7v12h4V6z" fill="#fff"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://sdk.scdn.co/spotify-player.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
