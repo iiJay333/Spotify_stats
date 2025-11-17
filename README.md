@@ -46,9 +46,4 @@ Notes and caveats
 - Playback requires a Spotify Premium account.
 - This demo uses a server to exchange the authorization code for tokens. That means you must keep the client secret secure and run this server locally or on a trusted host.
 - Access tokens expire (typically after 1 hour). This demo does not implement token refresh; for a production app implement refresh using the refresh token returned by Spotify.
-- Do not use this code as-is in production without adding proper error handling and secure secrets management.
 
-If you want, I can:
-- Add token refresh handling.
-- Convert the demo to a PKCE-only flow so no client secret is required (but that may require additional CORS checks).
-- Add UI for searching and selecting tracks/playlists.
